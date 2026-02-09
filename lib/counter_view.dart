@@ -51,7 +51,11 @@ class _CounterViewState extends State<CounterView> {
               ),
               FilledButton.icon(
                 icon: Icon(Icons.rotate_left),
-                onPressed: () => setState(() => _controller.reset()),
+                onPressed: () async {
+                  if (await _showResetDialog(context) ?? false) {
+                    setState(() => _controller.reset());
+                  }
+                },
                 label: Text('Reset'),
               ),
               Divider(indent: 16, endIndent: 16),
@@ -98,6 +102,34 @@ class _CounterViewState extends State<CounterView> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Future<bool?> _showResetDialog(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Konfirmasi Reset'),
+        content: const Text(
+          'Apakah Anda yakin ingin menghapus semua riwayat hitungan?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, true);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Hitungan telah direset')),
+              );
+            },
+            child: const Text('Reset'),
+          ),
+        ],
       ),
     );
   }
