@@ -14,12 +14,19 @@ class CounterController {
   final List<(String, String, Color?)> _history = [];
   List<(String, String, Color?)> get history => _history;
 
+  String _username = 'guest';
+  String get username => _username;
+
+  void setUsername(String username) {
+    _username = username;
+  }
+
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
-    _counter = prefs.getInt('counter') ?? 0;
-    _step = prefs.getInt('step') ?? 1;
+    _counter = prefs.getInt('counter_$_username') ?? 0;
+    _step = prefs.getInt('step_$_username') ?? 1;
 
-    final historyList = prefs.getStringList('history') ?? [];
+    final historyList = prefs.getStringList('history_$_username') ?? [];
     _history.clear();
     for (var item in historyList) {
       final parts = item.split('|');
@@ -39,8 +46,8 @@ class CounterController {
 
   Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('counter', _counter);
-    await prefs.setInt('step', _step);
+    await prefs.setInt('counter_$_username', _counter);
+    await prefs.setInt('step_$_username', _step);
 
     final historyStrings = _history
         .map(
@@ -48,7 +55,7 @@ class CounterController {
               '${e.$1}|${e.$2}|${e.$3 != null ? (e.$3!.r * 255).toInt() << 16 | (e.$3!.g * 255).toInt() << 8 | (e.$3!.b * 255).toInt() | (e.$3!.a * 255).toInt() << 24 : null}',
         )
         .toList();
-    await prefs.setStringList('history', historyStrings);
+    await prefs.setStringList('history_$_username', historyStrings);
   }
 
   Future<void> increment() async {

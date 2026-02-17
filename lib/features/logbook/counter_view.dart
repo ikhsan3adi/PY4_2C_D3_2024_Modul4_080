@@ -16,12 +16,26 @@ class _CounterViewState extends State<CounterView> {
   @override
   void initState() {
     super.initState();
+    _controller.setUsername(widget.username);
     _loadData();
   }
 
   Future<void> _loadData() async {
     await _controller.load();
     setState(() {});
+  }
+
+  String _getGreeting() {
+    var hour = DateTime.now().hour;
+    if (hour < 11) {
+      return 'Selamat Pagi';
+    } else if (hour < 15) {
+      return 'Selamat Siang';
+    } else if (hour < 18) {
+      return 'Selamat Sore';
+    } else {
+      return 'Selamat Malam';
+    }
   }
 
   @override
@@ -76,7 +90,12 @@ class _CounterViewState extends State<CounterView> {
             mainAxisSize: MainAxisSize.max,
             spacing: 16,
             children: [
-              Text('Selamat Datang, ${widget.username}!'),
+              Text(
+                '${_getGreeting()}, ${widget.username}!',
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               Text('Total Hitungan'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
