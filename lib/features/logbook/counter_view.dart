@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:logbook_app_080/features/logbook/counter_controller.dart';
 
 class CounterView extends StatefulWidget {
-  const CounterView({super.key});
+  final String username;
+  const CounterView({super.key, required this.username});
 
   @override
   State<CounterView> createState() => _CounterViewState();
@@ -15,15 +16,59 @@ class _CounterViewState extends State<CounterView> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
 
+    // Initial check for loading data (Task 3 requirement effectively, but we'll do controller logic later)
+    // We can just call load here or in initState
+    // _controller.loadLastValue();
+
     return Scaffold(
-      appBar: AppBar(title: Text('LogBook: SRP'), centerTitle: true),
+      appBar: AppBar(
+        title: Text('Logbook: ${widget.username}'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Konfirmasi Logout'),
+                  content: const Text('Apakah Anda yakin ingin keluar?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Batal'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Close dialog
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const OnboardingView(),
+                          ),
+                          (route) => false,
+                        );
+                      },
+                      child: const Text(
+                        'Ya, Keluar',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 32),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             spacing: 16,
             children: [
+              Text('Selamat Datang, ${widget.username}!'), // Added welcome text
               Text('Total Hitungan'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
