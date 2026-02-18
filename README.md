@@ -16,10 +16,19 @@ Aplikasi Logbook Digital dengan fitur CRUD (Create, Read, Update, Delete) dan pe
 
 ## Screenshots
 
-> coming soon
+|                      Empty State                       |                      Create Log                       |                     List Log                      |
+| :----------------------------------------------------: | :---------------------------------------------------: | :-----------------------------------------------: |
+| ![Empty State](.screenshots/screenshot_log_kosong.jpg) | ![Create Log](.screenshots/screenshot_create_log.jpg) | ![List Log](.screenshots/screenshot_list_log.jpg) |
+|                     **Search Log**                     |                    **Update Log**                     |                                                   |
+| ![Search Log](.screenshots/screenshot_search_log.jpg)  | ![Update Log](.screenshots/screenshot_update_log.jpg) |                                                   |
 
 ## Lesson Learned (Refleksi Akhir)
 
-1. **Konsep Baru**: Memahami perbedaan mendasar antara pemrograman imperatif (`setState`) dan reaktif (`ValueNotifier` + `ValueListenableBuilder`). Dengan pendekatan reaktif, UI hanya merender ulang bagian yang berubah, bukan seluruh halaman, sehingga jauh lebih efisien.
-2. **Kemenangan Kecil**: Berhasil mengimplementasikan serialisasi JSON (`jsonEncode`/`jsonDecode`) untuk menyimpan dan memuat kembali `List<LogModel>` dari `Shared Preferences`. Data catatan tetap utuh meskipun aplikasi di-restart.
-3. **Target Berikutnya**: Ingin mengeksplorasi state management yang lebih advanced seperti Provider atau Bloc, serta menambahkan fitur sorting dan filter berdasarkan kategori atau tanggal untuk meningkatkan kegunaan aplikasi.
+1. **Konsep Baru**:
+   - Memahami perbedaan mendasar antara pemrograman imperatif (`setState`) dan reaktif (`ValueNotifier` + `ValueListenableBuilder`). Dengan pendekatan reaktif, UI hanya merender ulang bagian yang berubah, bukan seluruh halaman, sehingga jauh lebih efisien.
+   - Baru paham bahwa ValueNotifier hanya mendeteksi perubahan jika referensi objeknya berubah. Jadi harus reassign list baru dengan spread operator, bukan sekadar .add() ke list yang sama.
+2. **Kemenangan Kecil**:
+   - Berhasil mengimplementasikan serialisasi JSON (`jsonEncode`/`jsonDecode`) untuk menyimpan dan memuat kembali `List<LogModel>` dari `Shared Preferences`. Data catatan tetap utuh meskipun aplikasi di-restart.
+   - Berhasil implementasi fitur search real-time yang bekerja di atas filteredLogs tanpa merusak data asli di logsNotifier. Awalnya sempat kehilangan data karena langsung memodifikasi logsNotifier saat search, tapi setelah mencoba memahami penggunaan 2 notifier, semuanya berjalan lancar.
+3. **Target Berikutnya**:
+   - Ingin eksplorasi penggunaan ChangeNotifier atau state management yang lebih advanced seperti Provider, agar pengelolaan state bisa lebih terstruktur ketika fitur aplikasi semakin banyak.
