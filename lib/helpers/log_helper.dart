@@ -27,7 +27,6 @@ class LogHelper {
       // ignore: avoid_print
       print('$color[$timestamp][$label][$source] -> $message\x1B[0m');
 
-      // Tulis ke file log harian
       await _writeToFile('[$timestamp][$label][$source] -> $message');
     } catch (e) {
       dev.log('Logging failed: $e', name: 'SYSTEM', level: 1000);

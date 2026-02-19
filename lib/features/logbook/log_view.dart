@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:logbook_app_080/constants/app_constants.dart';
 import 'package:logbook_app_080/features/logbook/log_controller.dart';
 import 'package:logbook_app_080/features/logbook/models/log_model.dart';
 import 'package:logbook_app_080/features/onboarding/onboarding_view.dart';
+import 'package:logbook_app_080/helpers/date_helper.dart';
 import 'package:logbook_app_080/helpers/log_helper.dart';
 import 'package:logbook_app_080/services/mongo_service.dart';
 
@@ -18,7 +20,7 @@ class _LogViewState extends State<LogView> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
-  String _selectedCategory = LogController.categories.first;
+  String _selectedCategory = AppConstants.categories.first;
   bool _isLoading = true;
 
   @override
@@ -42,7 +44,7 @@ class _LogViewState extends State<LogView> {
       );
 
       await MongoService().connect().timeout(
-        const Duration(seconds: 15),
+        AppConstants.connectionTimeout,
         onTimeout: () => throw Exception(
           'Koneksi Cloud Timeout. Periksa sinyal/IP Whitelist.',
         ),
@@ -93,7 +95,7 @@ class _LogViewState extends State<LogView> {
   void _showAddLogDialog() {
     _titleController.clear();
     _contentController.clear();
-    _selectedCategory = LogController.categories.first;
+    _selectedCategory = AppConstants.categories.first;
 
     showDialog(
       context: context,
@@ -134,23 +136,22 @@ class _LogViewState extends State<LogView> {
                     labelText: 'Kategori',
                     prefixIcon: Icon(Icons.category),
                   ),
-                  items: LogController.categories
+                  items: AppConstants.categories
                       .map(
                         (cat) => DropdownMenuItem(
                           value: cat,
                           child: Row(
                             children: [
                               Icon(
-                                LogController.categoryIcons[cat],
+                                AppConstants.categoryIcons[cat],
                                 size: 16,
-                                color: LogController.categoryAccentColors[cat],
+                                color: AppConstants.categoryAccentColors[cat],
                               ),
                               const SizedBox(width: 8),
                               Text(
                                 cat,
                                 style: TextStyle(
-                                  color:
-                                      LogController.categoryAccentColors[cat],
+                                  color: AppConstants.categoryAccentColors[cat],
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -235,23 +236,22 @@ class _LogViewState extends State<LogView> {
                     labelText: 'Kategori',
                     prefixIcon: Icon(Icons.category),
                   ),
-                  items: LogController.categories
+                  items: AppConstants.categories
                       .map(
                         (cat) => DropdownMenuItem(
                           value: cat,
                           child: Row(
                             children: [
                               Icon(
-                                LogController.categoryIcons[cat],
+                                AppConstants.categoryIcons[cat],
                                 size: 16,
-                                color: LogController.categoryAccentColors[cat],
+                                color: AppConstants.categoryAccentColors[cat],
                               ),
                               const SizedBox(width: 8),
                               Text(
                                 cat,
                                 style: TextStyle(
-                                  color:
-                                      LogController.categoryAccentColors[cat],
+                                  color: AppConstants.categoryAccentColors[cat],
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -455,13 +455,13 @@ class _LogViewState extends State<LogView> {
                       itemBuilder: (context, index) {
                         final log = currentLogs[index];
                         final cardColor =
-                            LogController.categoryColors[log.category] ??
+                            AppConstants.categoryColors[log.category] ??
                             theme.cardColor;
                         final categoryIcon =
-                            LogController.categoryIcons[log.category] ??
+                            AppConstants.categoryIcons[log.category] ??
                             Icons.note;
                         final accentColor =
-                            LogController.categoryAccentColors[log.category] ??
+                            AppConstants.categoryAccentColors[log.category] ??
                             Colors.black;
 
                         return Dismissible(
@@ -579,7 +579,9 @@ class _LogViewState extends State<LogView> {
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
-                                        _formatTimestamp(log.timestamp),
+                                        DateHelper.formatTimestamp(
+                                          log.timestamp,
+                                        ),
                                         style: TextStyle(
                                           fontSize: 11,
                                           color: theme.disabledColor,
@@ -642,40 +644,5 @@ class _LogViewState extends State<LogView> {
         child: const Icon(Icons.add),
       ),
     );
-  }
-
-  String _formatTimestamp(String timestamp) {
-    try {
-      final dateTime = DateTime.parse(timestamp);
-      final now = DateTime.now();
-      final difference = now.difference(dateTime);
-
-      if (difference.inMinutes < 1) return 'Baru saja';
-      if (difference.inMinutes < 60) {
-        return '${difference.inMinutes} menit yang lalu';
-      }
-      if (difference.inHours < 24) {
-        return '${difference.inHours} jam yang lalu';
-      }
-      if (difference.inDays < 7) return '${difference.inDays} hari yang lalu';
-
-      const months = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'Mei',
-        'Jun',
-        'Jul',
-        'Agu',
-        'Sep',
-        'Okt',
-        'Nov',
-        'Des',
-      ];
-      return '${dateTime.day} ${months[dateTime.month - 1]} ${dateTime.year}';
-    } catch (e) {
-      return timestamp;
-    }
   }
 }

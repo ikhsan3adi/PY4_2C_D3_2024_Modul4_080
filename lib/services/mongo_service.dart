@@ -1,4 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:logbook_app_080/constants/app_constants.dart';
 import 'package:logbook_app_080/features/logbook/models/log_model.dart';
 import 'package:logbook_app_080/helpers/log_helper.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -34,7 +35,7 @@ class MongoService {
       _db = await Db.create(dbUri);
 
       await _db!.open().timeout(
-        const Duration(seconds: 15),
+        AppConstants.connectionTimeout,
         onTimeout: () {
           throw Exception('Koneksi Timeout. Cek Koneksi Internet.');
         },
