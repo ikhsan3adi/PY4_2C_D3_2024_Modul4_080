@@ -8,7 +8,9 @@ class LogController {
   final ValueNotifier<List<LogModel>> logsNotifier = ValueNotifier([]);
   final ValueNotifier<List<LogModel>> filteredLogs = ValueNotifier([]);
 
-  LogController();
+  final String username;
+
+  LogController({required this.username});
 
   List<LogModel> get logs => logsNotifier.value;
 
@@ -19,6 +21,7 @@ class LogController {
   }) async {
     final newLog = LogModel(
       id: ObjectId(),
+      username: username,
       title: title,
       description: desc,
       timestamp: DateTime.now().toString(),
@@ -57,6 +60,7 @@ class LogController {
 
     final updatedLog = LogModel(
       id: oldLog.id,
+      username: username,
       title: title,
       description: desc,
       timestamp: DateTime.now().toString(),
@@ -132,7 +136,7 @@ class LogController {
   }
 
   Future<void> loadFromCloud() async {
-    final cloudData = await MongoService().getLogs();
+    final cloudData = await MongoService().getLogs(username);
     logsNotifier.value = cloudData;
     filteredLogs.value = cloudData;
   }

@@ -2,6 +2,7 @@ import 'package:mongo_dart/mongo_dart.dart';
 
 class LogModel {
   final ObjectId? id;
+  final String username;
   final String title;
   final String timestamp;
   final String description;
@@ -9,6 +10,7 @@ class LogModel {
 
   LogModel({
     this.id,
+    required this.username,
     required this.title,
     required this.timestamp,
     required this.description,
@@ -18,6 +20,7 @@ class LogModel {
   factory LogModel.fromMap(Map<String, dynamic> map) {
     return LogModel(
       id: map['_id'] as ObjectId?,
+      username: map['username'] ?? '',
       title: map['title'] ?? '',
       timestamp: map['timestamp'] ?? map['date'] ?? '',
       description: map['description'] ?? '',
@@ -28,6 +31,7 @@ class LogModel {
   Map<String, dynamic> toMap() {
     return {
       '_id': id ?? ObjectId(),
+      'username': username,
       'title': title,
       'timestamp': timestamp,
       'description': description,

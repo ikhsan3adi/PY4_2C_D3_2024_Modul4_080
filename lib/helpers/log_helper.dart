@@ -48,6 +48,7 @@ class LogHelper {
       await logFile.writeAsString('$logLine\n', mode: FileMode.append);
     } catch (e) {
       dev.log('File logging failed: $e', name: 'SYSTEM', level: 1000);
+      rethrow;
     }
   }
 
