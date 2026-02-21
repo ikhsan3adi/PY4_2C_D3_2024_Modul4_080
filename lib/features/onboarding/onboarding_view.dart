@@ -53,17 +53,22 @@ class _OnboardingViewState extends State<OnboardingView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(),
-              Container(
-                height: 350,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer.withValues(
-                    alpha: 0.5,
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  image: DecorationImage(
-                    image: AssetImage(currentData['image']!),
-                    fit: BoxFit.contain,
+              Expanded(
+                flex: 6,
+                child: Center(
+                  child: Container(
+                    height: 350,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primaryContainer.withValues(
+                        alpha: 0.5,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      image: DecorationImage(
+                        image: AssetImage(currentData['image']!),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
                 ),
               ),

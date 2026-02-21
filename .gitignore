@@ -51,4 +51,6 @@ app.*.map.json
 
 *_Modul*_080.txt
 
+.apk-release
+
 .env
